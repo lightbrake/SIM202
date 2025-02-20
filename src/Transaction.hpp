@@ -7,7 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "message.hpp"  // Intégration de la classe Message
+#include "Message.hpp"  // Intégration de la classe Message
 
 // Structure représentant une transaction individuelle
 struct TransactionRecord {
@@ -76,6 +76,19 @@ public:
             std::cerr << "Erreur lors de l'ouverture du fichier de transaction." << std::endl;
         }
     }
+
+    ///t
+// Ajoutez cette méthode dans la classe Transaction
+void addTransactionRecord(const std::string& clientID, const std::string& action, char type, double prix, int quantite, const std::string& date) {
+    TransactionRecord record {clientID, type, prix, quantite, date};
+    historique[action].push_back(record);
+    // Vous pouvez également ajouter ici une logique pour sauvegarder en fichier si nécessaire.
+}
+
 };
+
+
+
+
 
 #endif // TRANSACTION_H

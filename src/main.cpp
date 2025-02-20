@@ -1,42 +1,45 @@
 #include <iostream>
-#include "message.hpp"
+#include "Message.hpp"
 #include "Transaction.hpp"
+#include "Order.hpp"
 
 int main() {
-    std::cout << "=== Test des Classes Message et Transaction ===\n" << std::endl;
+    std::cout << "=== Simulation du Marché en Continu ===\n" << std::endl;
 
-    // 1. Création d'un message client contenant plusieurs ordres
-    Message msg1("client123", 1, "#A,TSLA,10,750.5,2025-02-04;#V,AAPL,5,150.0,2025-02-04");
+    OrderBook orderBook;
 
-    // 2. Vérification du message
-    if (!msg1.validate()) {
-        std::cerr << "[Erreur] Message invalide !" << std::endl;
-        return 1;
-    }
+    // ** Phase 1 : Initialisation du marché avec les ordres existants **
+    std::cout << "[Ajout des ordres initiaux au carnet]\n";
 
-    // 3. Affichage du message
-    std::cout << "[Client] Message envoyé : " << msg1.toString() << std::endl;
+    Message existingOrders("MarketInit", 0,
+        "#A,STOCK,500,149,2025-02-04;"
+        "#A,STOCK,2000,148,2025-02-04;"
+        "#A,STOCK,1500,147,2025-02-04;"
+        "#A,STOCK,1000,146,2025-02-04;"
+        "#V,STOCK,1000,150,2025-02-04;"
+        "#V,STOCK,1500,151,2025-02-04;"
+        "#V,STOCK,2500,152,2025-02-04;"
+        "#V,STOCK,1000,153,2025-02-04"
+    );
 
-    // 4. Extraction des ordres depuis le message
-    std::vector<Ordre> ordres = msg1.parseContent();
+    orderBook.addOrder(existingOrders);
 
-    std::cout << "\n[Serveur] Ordres extraits du message :\n";
-    for (const auto& ordre : ordres) {
-        std::cout << "  Type: " << ordre.type
-                  << ", Action: " << ordre.action
-                  << ", Quantité: " << ordre.quantite
-                  << ", Prix: " << ordre.prix
-                  << ", Date: " << ordre.date << std::endl;
-    }
+    // ** Affichage du carnet avant l'arrivée du nouvel ordre **
+    std::cout << "\n=== Carnet d'ordres avant nouvelle offre ===\n";
+    orderBook.printOrderBook();
 
-    // 5. Création du gestionnaire de transactions
-    Transaction transactionManager;
+    // ** Phase 2 : Un client place un gros ordre d'achat **
+    std::cout << "\n[Un client place un ordre d'achat de 4000 actions à 152 €]\n";
+    Message newOrder("clientX", 1, "#A,STOCK,4000,152,2025-02-04");
+    orderBook.addOrder(newOrder);
 
-    // 6. Ajout des transactions à partir du message
-    transactionManager.addTransaction(msg1);
+    // ** Affichage du carnet après exécution de l'ordre **
+    std::cout << "\n=== Carnet d'ordres après exécution ===\n";
+    orderBook.printOrderBook();
 
-    // 7. Affichage des transactions enregistrées
-    std::cout << "\n=== Historique des Transactions ===" << std::endl;
-    transactionManager.printAllTransactions();
+    // ** Affichage des transactions effectuées **
+    std::cout << "\n=== Historique des Transactions ===\n";
+    orderBook.printTransactions();
 
+    return 0;
 }

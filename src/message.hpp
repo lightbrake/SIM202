@@ -9,6 +9,7 @@
 // Structure représentant un ordre individuel extrait du message
 struct Ordre {
     char type;        // 'A' pour Achat, 'V' pour Vente
+    std::string clientID;  // Identifiant du client
     std::string action;
     int quantite;
     double prix;
@@ -38,8 +39,6 @@ public:
         if(clientID.empty()) return false;
         if(messageID <= 0) return false;
         if(contenu.empty()) return false;
-        // Vérification additionnelle: le contenu doit respecter le format des ordres (au moins un ordre)
-        // On pourrait ajouter ici des tests plus précis (par exemple, nombre de champs par ordre)
         return true;
     }
 
@@ -59,17 +58,19 @@ public:
             while (std::getline(ordreStream, field, ',')) {
                 fields.push_back(field);
             }
-            // On attend exactement 5 champs par ordre
+            // Vérification du format : un ordre doit avoir exactement 5 champs
             if(fields.size() != 5) {
-                std::cerr << "Format d'ordre invalide: " << token << std::endl;
+                std::cerr << "[Erreur] Format d'ordre invalide: " << token << std::endl;
                 continue;
             }
-            // Extraction du type : si le champ commence par '#' on ignore ce caractère
+            // Extraction des données
             ordre.type = (fields[0][0] == '#') ? fields[0][1] : fields[0][0];
+            ordre.clientID = this->clientID; // Ajout du client ID
             ordre.action = fields[1];
             ordre.quantite = std::stoi(fields[2]);
             ordre.prix = std::stod(fields[3]);
             ordre.date = fields[4];
+
             ordres.push_back(ordre);
         }
         return ordres;
