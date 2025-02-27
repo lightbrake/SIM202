@@ -39,15 +39,15 @@ public:
     }
 
     void printPortfolio() const {
-std::cout << "\n=== État des Portefeuilles ===\n";
-    for (const auto& client : portefeuille) {
-        std::cout << "Client: " << client.first << "\n";
-        std::cout << std::setw(20) << "Action"<<"    " << std::setw(15) << "Quantité\n";
-        for (const auto& asset : client.second) {
-            std::cout << std::setw(20) << asset.first << std::setw(15) << asset.second << "\n";
+        std::cout << "\n=== État des Portefeuilles ===\n";
+        for (const auto& client : portefeuille) {
+            std::cout << "Client: " << client.first << "\n";
+            std::cout << std::setw(20) << "Action"<<"    " << std::setw(15) << "Quantité\n";
+            for (const auto& asset : client.second) {
+                std::cout << std::setw(20) << asset.first << std::setw(15) << asset.second << "\n";
+            }
+            std::cout << "\n";
         }
-        std::cout << "\n";
-    }
     }
 
     // Vérifie si le client a assez d'actions pour vendre
