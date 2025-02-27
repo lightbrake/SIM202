@@ -1,0 +1,2 @@
+clientX,STOCK,4000
+sugma,stock,130
